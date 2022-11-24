@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+    id Int @id @default(autoincrement())
+    createAt DateTime @default(now())
+    email String @unique
+    password String
+    firstName String?
+    lastName String?
+
+    auth_logs AuthLog[]
+    company Company[]
+    branch Branch[]
+    @@map("users")
+}
+
+model AuthLog {
+    Id Int @id @default(autoincrement())
+    loginAt DateTime @default(now())
+
+    user_id Int
+    user User @relation(fields: [user_id], references: [id])
+
+    @@map("auth_logs")
+}
+
+model Company{
+    Id Int @id @default(autoincrement())
+    company_name String
+    location String
+    branches Int
+    type String
+
+    user_id Int
+    user User @relation(fields: [user_id], references: [id])
+
+    branch Branch[]
+    @@map("company")
+}
+
+model Branch{
+    id Int @id @default(autoincrement())
+    name String
+    location String
+
+    company_id Int
+    user_id Int
+
+    user User @relation(fields: [user_id], references: [id])
+
+    company Company @relation(fields: [company_id], references: [Id])
+
+    @@map("branch")
+}
