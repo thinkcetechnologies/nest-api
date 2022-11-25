@@ -88,6 +88,7 @@ model Employee{
     branch Branch @relation(fields: [branch_id], references: [id])
 
     employee_role EmployeeRole[]
+    employee_user EmployeeUser[]
     @@map("employee")
 }
 
@@ -133,4 +134,16 @@ model UserRole{
     user User @relation(fields: [user_id], references: [id])
 
     @@map("user_role")
+}
+
+model EmployeeUser{
+    id Int @id @default(autoincrement())
+    username String
+    password String
+
+    employee_id Int
+
+    employee Employee @relation(fields: [employee_id], references: [id])
+
+    @@map("employee_user")
 }
