@@ -7,6 +7,12 @@ export class CompanyDto {
   @IsString()
   location: string;
 
+  @IsString()
+  company_address: string;
+
+  @IsInt()
+  company_size: number;
+
   @IsInt()
   branches: number;
 

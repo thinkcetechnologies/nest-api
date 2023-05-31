@@ -8,6 +8,7 @@ import { UserroleDto } from './dto';
 @Controller('userole')
 export class UseroleController {
   constructor(private userRoleService: UseroleService){}
+
   @Post("create/:id")
   public create(@GetUser("id") userId: any, @Param("id") id: number, @Body() dto: UserroleDto){
     return this.userRoleService.create(userId, id, dto);

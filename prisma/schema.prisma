@@ -12,6 +12,7 @@ model User {
     id Int @id @default(autoincrement())
     createAt DateTime @default(now())
     email String @unique
+    username String @unique
     password String
     firstName String?
     lastName String?
@@ -41,6 +42,8 @@ model Company{
     location String
     branches Int
     type String
+    company_size Int
+    company_address String
 
     user_id Int
     user User @relation(fields: [user_id], references: [id])

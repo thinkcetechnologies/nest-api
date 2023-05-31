@@ -2,11 +2,9 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmployeeroleDto } from './dto';
 
-
 @Injectable()
 export class EmployeeroleService {
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   public async create(userId: any, id: number, dto: EmployeeroleDto) {
     try {
@@ -70,6 +68,7 @@ export class EmployeeroleService {
   }
   public async findOne(userId: any, id: number){
     try{
+
       const employeerole = await this.prisma.employeeRole.findUnique({
         where: {
           id: parseInt(String(id)),

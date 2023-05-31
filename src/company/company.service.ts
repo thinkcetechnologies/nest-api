@@ -14,6 +14,8 @@ export class CompanyService {
             location: dto.location,
             type: dto.type,
             branches: dto.branches,
+            company_address: dto.company_address,
+            company_size: dto.company_size,
             user_id: userId.id,
           }
         });

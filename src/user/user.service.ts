@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
-import { EdituserDto, UserDto } from './dto';
+import { EdituserDto, SigninUserDto, UserDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -13,13 +13,19 @@ export class UserService {
   public async create(dto: UserDto){
       const password = await argon.hash(dto.password);
       try{
+
         const user = await this.prisma.user.create({
           data: {
             email: dto.email,
+            username: dto.username,
+            firstName: dto.first_name,
+            lastName: dto.last_name,
             password,
           }
         });
-        return this.signToken(user.id, user.email);
+        console.log(dto.email);
+        delete user.password;
+        return user;
       }catch (e) {
         if(e instanceof PrismaClientKnownRequestError){
           if(e.code == "P2002"){
@@ -35,7 +41,7 @@ export class UserService {
       email,
     };
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: "200m",
+      expiresIn: "20000m",
       secret: this.config.get("JWT_SECRET_KEY")
     });
     return {
@@ -55,14 +61,14 @@ export class UserService {
       delete user.password;
       return user;
   }
-  public async signin(dto: UserDto){
+  public async signin(dto: SigninUserDto){
     const user = await this.prisma.user.findUnique({
       where: {
-        email: dto.email,
+        username: dto.username,
       }
     });
     if(!user){
-      throw new ForbiddenException("Invalid Email");
+      throw new ForbiddenException("Invalid username");
     }
     const checkPassword = await argon.verify(user.password, dto.password);
     if(!checkPassword){
